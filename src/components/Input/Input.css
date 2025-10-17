@@ -1,0 +1,30 @@
+.input-cover {
+    label {
+        font-size: 17px;
+        padding-left: 5px;
+    }
+
+    input {
+        width: 300px;
+        height: 30px;
+        border-radius: 10px;
+        margin: 0 0 10px 0;
+        padding-left: 10px;
+        border: 1.5px #BBB solid;
+        background-color: #bbbbbb2a;
+        outline: none;
+    }
+
+    input:hover {
+        outline: 1px solid #007bff;
+        outline-offset: 2px;
+    }
+
+    input:focus {
+        outline: 1px solid #007bff;
+        outline-offset: 2px;
+        background-color: #f9fcff;
+    }
+
+
+}

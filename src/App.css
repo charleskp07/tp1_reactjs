@@ -1,0 +1,29 @@
+
+
+.contenair {
+    justify-self: center;
+    border: 1px solid #ccc;
+    padding: 30px;
+    border-radius: 20px;
+    background: none;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.sbm-btn {
+    color: #fff;
+    border: none;
+    font-size: medium;
+    font-weight: 600;
+    border-radius: 10px;
+    background-color: #007bff;
+    width: 320px;
+    height: 35px;
+    margin-top: 20px;
+}
+
+.sbm-btn:hover {
+    background-color: #006fe5;
+}
