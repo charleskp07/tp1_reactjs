@@ -2,10 +2,10 @@ import { Fragment } from "react/jsx-runtime";
 import H1 from "../../components/H1/H1";
 import Form from "../../components/Form/Form";
 import Input from "../../components/Input/Input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import z from "zod";
-import axios from "axios";
+import { userApi } from "../../api/users/authentication";
 
 
 const loginSchema = z.object({
@@ -15,21 +15,16 @@ const loginSchema = z.object({
 
 type LoginData = z.infer<typeof loginSchema>;
 
-type projectType = {
-    name: string
-}
-type projectResponse = {
-    data: [
-        projectType
-    ]
-}
+
 
 export default function Home() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string>("");
     const navigate = useNavigate();
-    const [projects, setProjects] = useState<Array<projectType>>([]);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
 
 
     const OnEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +36,7 @@ export default function Home() {
     }
 
 
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data: LoginData = { email, password };
         const validation = loginSchema.safeParse(data);
@@ -53,52 +48,42 @@ export default function Home() {
         }
 
 
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        try {
+            setIsLoading(true)
+            const formData = new FormData()
+            formData.set("email", email)
+            formData.set("password", password)
+            const result = await userApi.login(formData)
+            console.log(result, email, password)
+            if (result.success) {
+                console.log("connexion reussi")
+            }else {
+                console.log("echec")
+            }
 
-        if (user && user.email === email && user.password === password) {
-            navigate("/profile")
-        } else {
-            setError("User not found");
+        } catch (error) {
             console.log(error)
+        } finally {
+            setIsLoading(false)
         }
+        
+        // const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        // if (user && user.email === email && user.password === password) {
+        // } else {
+        //     setError("User not found");
+        //     console.log(error)
+        // }
     }
 
-
-    useEffect(() => {
-        axios.get('https://focuspro.dayal-enterprises.com/public/api/projects')
-
-            .then(function (response) {
-
-                // handle success
-                console.log(response.data);
-
-                const resultData: projectResponse = response;
-                // console.log(resultData.data[0])
-
-                setProjects(resultData.data)
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .finally(function () {
-                // always executed(example: isLoading)
-            });
-    }, []);
 
 
     return (
         <div className="contenair">
             <Fragment>
-                {
-                    projects.map((project, index) => {
-                        return (
-                            <div key={index}>
-                                {project.name}
-                            </div>
-                        )
-                    })
-                }
+
+                <Link to="/projects" >Listes de projects</Link>
+
 
                 <Form onSubmit={onSubmit}>
                     <H1>
